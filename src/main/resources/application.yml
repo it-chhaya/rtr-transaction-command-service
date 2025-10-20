@@ -1,0 +1,30 @@
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+spring:
+  application:
+    name: transaction-command
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      username: admin
+      password: admin@123
+  rabbitmq:
+    host: localhost
+    username: admin
+    password: password
+    port: 5672
+  data:
+    mongodb:
+      host: localhost:27025
+      username: rtrms
+      password: qwer
+      database: transactionDB
+      authentication-database: admin
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
