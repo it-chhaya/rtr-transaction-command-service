@@ -1,3 +1,4 @@
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${server.port}
@@ -23,8 +24,36 @@ spring:
       password: qwer
       database: transactionDB
       authentication-database: admin
+  kafka:
+    bootstrap-servers: localhost:29093,localhost:39093,localhost:49093
+    security:
+      protocol: SSL
+    ssl:
+      trust-store-location: classpath:kafka.server.truststore.jks
+      trust-store-password: password123
+      key-store-location: classpath:kafka.server.keystore.jks
+      key-store-password: password123
+      key-password: password123
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: false
+        value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+        #spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+    properties:
+      schema.registry.url: http://localhost:8081
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+server:
+  port: 16809

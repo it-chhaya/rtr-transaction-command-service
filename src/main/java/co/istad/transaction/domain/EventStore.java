@@ -1,4 +1,4 @@
-package co.istad.transaction;
+package co.istad.transaction.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
