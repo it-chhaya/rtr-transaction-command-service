@@ -7,12 +7,15 @@ import co.istad.transaction.dto.CreateDepositRequest;
 import co.istad.transaction.dto.TransactionResponse;
 import co.istad.transaction.repository.EventStoreRepository;
 import co.istad.transaction.repository.TransactionRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -24,6 +27,7 @@ implements TransactionCommandService {
     private final TransactionRepository transactionRepository;
     private final EventStoreRepository eventStoreRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public TransactionResponse createDeposit(CreateDepositRequest createDepositRequest) {
@@ -45,15 +49,17 @@ implements TransactionCommandService {
         // Save event into MongoDB
         EventStore eventStore = new EventStore();
         eventStore.setEventId(UUID.randomUUID());
-        eventStore.setEventType("DEPOSIT_CREATED_EVENT");
+        eventStore.setEventType("TransactionDeposited");
         eventStore.setAggregateId(transaction.getId());
         eventStore.setAggregateType(Transaction.class.getSimpleName());
         eventStore.setVersion(String.valueOf(eventStoreRepository.countByAggregateId(transaction.getId()) + 1));
-        eventStore.setEventData(transaction);
+        eventStore.setEventData(objectMapper.convertValue(transaction,
+                new TypeReference<Map<String, Object>>() {
+                }));
 
         eventStoreRepository.save(eventStore);
 
-        kafkaTemplate.send("DEPOSIT_CREATED_EVENT", eventStore.getAggregateId(), eventStore);
+        kafkaTemplate.send("banking.transaction.deposited", eventStore.getAggregateId(), eventStore);
 
         return TransactionResponse.builder()
                 .transactionId(transaction.getId())

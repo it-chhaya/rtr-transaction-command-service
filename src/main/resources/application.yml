@@ -1,4 +1,3 @@
-
 eureka:
   instance:
     instance-id: ${spring.application.name}:${server.port}
@@ -39,14 +38,16 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
+        spring.json.trusted.packages: "*"
+        spring.json.add.type.headers: false
         schema.registry.url: http://localhost:8081
         specific.avro.reader: false
         value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
-        #spring.json.trusted.packages: "*"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
+        spring.json.add.type.headers: false
         schema.registry.url: http://localhost:8081
     properties:
       schema.registry.url: http://localhost:8081

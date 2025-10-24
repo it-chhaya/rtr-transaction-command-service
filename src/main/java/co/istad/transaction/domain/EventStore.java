@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -20,5 +21,5 @@ public class EventStore {
     private String aggregateId;
     private String aggregateType;
     private Instant timestamp = Instant.now();
-    private Object eventData;
+    private Map<String, Object> eventData;
 }
