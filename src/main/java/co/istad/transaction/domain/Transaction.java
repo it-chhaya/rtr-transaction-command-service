@@ -26,4 +26,7 @@ public class Transaction {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    private TransactionStatus status;
+
 }

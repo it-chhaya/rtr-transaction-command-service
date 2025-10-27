@@ -40,6 +40,7 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
         spring.json.add.type.headers: false
+        spring.json.value.default.type: co.istad.transaction.domain.EventStore
         schema.registry.url: http://localhost:8081
         specific.avro.reader: false
         value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy

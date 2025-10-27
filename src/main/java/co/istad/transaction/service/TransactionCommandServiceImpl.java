@@ -2,6 +2,7 @@ package co.istad.transaction.service;
 
 import co.istad.transaction.domain.EventStore;
 import co.istad.transaction.domain.Transaction;
+import co.istad.transaction.domain.TransactionStatus;
 import co.istad.transaction.domain.TypeEnum;
 import co.istad.transaction.dto.CreateDepositRequest;
 import co.istad.transaction.dto.TransactionResponse;
@@ -42,6 +43,7 @@ implements TransactionCommandService {
         transaction.setRemark(createDepositRequest.remark());
         transaction.setCurrency(createDepositRequest.currency());
         transaction.setTypeCode(TypeEnum.DEPOSIT);
+        transaction.setStatus(TransactionStatus.PENDING);
 
         // Save data into MongoDB
         transactionRepository.save(transaction);
