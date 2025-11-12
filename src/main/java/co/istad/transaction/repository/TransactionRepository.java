@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface TransactionRepository
 extends MongoRepository<Transaction, String> {
 
+    Optional<Transaction> findByTransactionId(String transactionId);
+
 }

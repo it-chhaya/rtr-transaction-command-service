@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.expression.spel.ast.TypeCode;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -17,9 +18,12 @@ public class Transaction {
     @Id
     private String id;
 
-    private Long accountId;
-    private TypeEnum typeCode;
+    private String transactionId;
+    private String accountNumber;
+    private String fromAccountNumber;
+    private String toAccountNumber;
     private BigDecimal amount;
+    private TypeEnum typeCode;
     private CurrencyEnum currency;
     private String remark;
     private Instant createdAt;
@@ -27,6 +31,9 @@ public class Transaction {
     private String createdBy;
     private String updatedBy;
 
+    private TypeEnum type;
     private TransactionStatus status;
+
+    private Long version;
 
 }
