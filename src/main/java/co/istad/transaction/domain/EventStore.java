@@ -21,5 +21,5 @@ public class EventStore {
     private String aggregateId;
     private String aggregateType;
     private Instant timestamp = Instant.now();
-    private Map<String, Object> eventData;
+    private String eventData;
 }

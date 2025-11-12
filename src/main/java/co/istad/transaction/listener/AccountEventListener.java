@@ -34,42 +34,42 @@ public class AccountEventListener {
     public void handleAccountEvents(EventStore eventStore) {
         log.info("Received event: {}", eventStore);
 
-        String eventType = eventStore.getEventType();
-
-        switch (eventType) {
-            case "AccountCredited" -> handleAccountCredited(eventStore);
-            case "AccountCreditFailed" -> handleAccountCreditFailed(eventStore);
-            default -> throw new IllegalArgumentException("Unknown event type: " + eventType);
-        }
+//        String eventType = eventStore.getEventType();
+//
+//        switch (eventType) {
+//            case "AccountCredited" -> handleAccountCredited(eventStore);
+//            case "AccountCreditFailed" -> handleAccountCreditFailed(eventStore);
+//            default -> throw new IllegalArgumentException("Unknown event type: " + eventType);
+//        }
 
     }
 
     private void handleAccountCreditFailed(EventStore eventStore) {
     }
 
-    private void handleAccountCredited(EventStore eventData) {
-        // Validate transaction
-        String txnId = eventData.getEventData().get("txnId").toString();
-
-        Transaction transaction = transactionRepository
-                .findById(txnId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid transaction"));
-        transaction.setStatus(TransactionStatus.COMPLETED);
-        transaction.setUpdatedAt(Instant.now());
-        transaction.setUpdatedBy("rtr");
-        transactionRepository.save(transaction);
-
-        EventStore eventStore = new EventStore();
-        eventStore.setEventId(UUID.randomUUID());
-        eventStore.setEventType("TransactionDepositCompleted");
-        eventStore.setAggregateId(transaction.getId());
-        eventStore.setAggregateType(Transaction.class.getSimpleName());
-        eventStore.setVersion(String.valueOf(eventStoreRepository.countByAggregateId(transaction.getId()) + 1));
-        eventStore.setEventData(objectMapper.convertValue(transaction,
-                new TypeReference<Map<String, Object>>() {
-                }));
-
-        eventStoreRepository.save(eventStore);
-        kafkaTemplate.send("transaction-events", eventStore.getAggregateId(), eventStore);
-    }
+//    private void handleAccountCredited(EventStore eventData) {
+//        // Validate transaction
+//        String txnId = eventData.getEventData().get("txnId").toString();
+//
+//        Transaction transaction = transactionRepository
+//                .findById(txnId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid transaction"));
+//        transaction.setStatus(TransactionStatus.COMPLETED);
+//        transaction.setUpdatedAt(Instant.now());
+//        transaction.setUpdatedBy("rtr");
+//        transactionRepository.save(transaction);
+//
+//        EventStore eventStore = new EventStore();
+//        eventStore.setEventId(UUID.randomUUID());
+//        eventStore.setEventType("TransactionDepositCompleted");
+//        eventStore.setAggregateId(transaction.getId());
+//        eventStore.setAggregateType(Transaction.class.getSimpleName());
+//        eventStore.setVersion(String.valueOf(eventStoreRepository.countByAggregateId(transaction.getId()) + 1));
+//        eventStore.setEventData(objectMapper.convertValue(transaction,
+//                new TypeReference<Map<String, Object>>() {
+//                }));
+//
+//        eventStoreRepository.save(eventStore);
+//        kafkaTemplate.send("transaction-events", eventStore.getAggregateId(), eventStore);
+//    }
 }

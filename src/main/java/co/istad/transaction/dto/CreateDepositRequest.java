@@ -8,8 +8,7 @@ import java.math.BigDecimal;
 
 public record CreateDepositRequest(
         @NotNull
-        @Positive
-        Long accountId,
+        String accountNumber,
         @NotNull
         BigDecimal amount,
         @NotNull

@@ -17,7 +17,7 @@ public class Transaction {
     @Id
     private String id;
 
-    private Long accountId;
+    private String accountNumber;
     private TypeEnum typeCode;
     private BigDecimal amount;
     private CurrencyEnum currency;
