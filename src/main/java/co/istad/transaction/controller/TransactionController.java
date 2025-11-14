@@ -15,7 +15,7 @@ public class TransactionController {
 
     private final TransactionCommandService transactionCommandService;
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/deposit")
     public TransactionResponse createDeposit(
             @Valid @RequestBody CreateDepositRequest createDepositRequest
