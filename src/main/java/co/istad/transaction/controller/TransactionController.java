@@ -1,6 +1,6 @@
 package co.istad.transaction.controller;
 
-import co.istad.transaction.dto.CreateDepositRequest;
+import co.istad.transaction.command.CreateDepositCommand;
 import co.istad.transaction.dto.TransactionResponse;
 import co.istad.transaction.service.TransactionCommandService;
 import jakarta.validation.Valid;
@@ -17,10 +17,11 @@ public class TransactionController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/deposit")
-    public TransactionResponse createDeposit(
-            @Valid @RequestBody CreateDepositRequest createDepositRequest
+    public String createDeposit(
+            @Valid @RequestBody CreateDepositCommand createDepositCommand
     ) {
-        return transactionCommandService.createDeposit(createDepositRequest);
+        return transactionCommandService
+                .createDeposit(createDepositCommand);
     }
 
 }

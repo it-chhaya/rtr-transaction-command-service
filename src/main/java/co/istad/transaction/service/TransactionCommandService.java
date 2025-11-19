@@ -1,10 +1,14 @@
 package co.istad.transaction.service;
 
-import co.istad.transaction.dto.CreateDepositRequest;
-import co.istad.transaction.dto.TransactionResponse;
+import co.istad.transaction.command.CompleteTransactionCommand;
+import co.istad.transaction.command.CreateDepositCommand;
+import co.istad.transaction.command.FailTransactionCommand;
 
 public interface TransactionCommandService {
 
-    TransactionResponse createDeposit(CreateDepositRequest createDepositRequest);
+    String createDeposit(CreateDepositCommand createDepositCommand);
 
+    void handleCompleteTransactionCommand(CompleteTransactionCommand command);
+
+    void handleFailTransactionCommand(FailTransactionCommand command);
 }

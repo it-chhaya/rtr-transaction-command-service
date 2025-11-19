@@ -1,12 +1,11 @@
-package co.istad.transaction.dto;
+package co.istad.transaction.command;
 
 import co.istad.transaction.domain.CurrencyEnum;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-public record CreateDepositRequest(
+public record CreateDepositCommand(
         @NotNull
         String accountNumber,
         @NotNull

@@ -16,7 +16,7 @@ public class EventStore {
     @Id
     private String id;
     private UUID eventId;
-    private String version;
+    private Long version;
     private String eventType;
     private String aggregateId;
     private String aggregateType;

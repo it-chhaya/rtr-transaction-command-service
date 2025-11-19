@@ -15,9 +15,11 @@ import java.time.Instant;
 @Document(collection = "transactions")
 public class Transaction {
     @Id
-    private String id;
+    private String id; // transaction ID
 
-    private String accountNumber;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+
     private TypeEnum typeCode;
     private BigDecimal amount;
     private CurrencyEnum currency;
@@ -28,5 +30,7 @@ public class Transaction {
     private String updatedBy;
 
     private TransactionStatus status;
+
+    private Long version;
 
 }
