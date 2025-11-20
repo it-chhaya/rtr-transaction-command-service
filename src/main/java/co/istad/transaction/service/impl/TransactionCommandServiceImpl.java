@@ -46,7 +46,6 @@ public class TransactionCommandServiceImpl
         return transactionId;
     }
 
-
     @Override
     public void handleCompleteTransactionCommand(CompleteTransactionCommand command) {
         log.info("handle deposited event: {}", command);
