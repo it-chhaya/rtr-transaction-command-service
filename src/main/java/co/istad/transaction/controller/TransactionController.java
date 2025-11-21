@@ -1,6 +1,7 @@
 package co.istad.transaction.controller;
 
 import co.istad.transaction.command.CreateDepositCommand;
+import co.istad.transaction.command.CreateTransferCommand;
 import co.istad.transaction.dto.TransactionResponse;
 import co.istad.transaction.service.TransactionCommandService;
 import jakarta.validation.Valid;
@@ -14,6 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     private final TransactionCommandService transactionCommandService;
+
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/transfer")
+    public String createTransfer(
+            @RequestBody CreateTransferCommand command
+            ) {
+        return transactionCommandService
+                .createTransfer(command);
+    }
+
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping("/deposit")

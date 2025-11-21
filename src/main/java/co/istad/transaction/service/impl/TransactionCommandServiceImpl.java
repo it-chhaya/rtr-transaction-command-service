@@ -3,9 +3,11 @@ package co.istad.transaction.service.impl;
 import co.istad.transaction.aggregate.TransactionAggregate;
 import co.istad.transaction.command.CompleteTransactionCommand;
 import co.istad.transaction.command.CreateDepositCommand;
+import co.istad.transaction.command.CreateTransferCommand;
 import co.istad.transaction.command.FailTransactionCommand;
 import co.istad.transaction.event.TransactionCompletedEvent;
 import co.istad.transaction.publisher.EventPublisher;
+import co.istad.transaction.saga.TransferSagaOrchestration;
 import co.istad.transaction.service.EventStoreService;
 import co.istad.transaction.service.TransactionCommandService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,33 @@ public class TransactionCommandServiceImpl
 
     private final EventStoreService eventStoreService;
     private final EventPublisher eventPublisher;
+
+    private final TransferSagaOrchestration transferSagaOrchestration;
+
+
+    @Override
+    public String createTransfer(CreateTransferCommand command) {
+        log.info("create transfer command: {}", command);
+
+        String transactionId = UUID.randomUUID().toString();
+        TransactionAggregate aggregate =
+                new TransactionAggregate(transactionId);
+        aggregate.handle(command);
+
+        // Persist event sourcing
+        eventStoreService.saveEvents(aggregate, transactionId);
+
+        // Update read model (Event Publisher)
+        eventPublisher.publishEvents("transaction-created-event", aggregate.getUncommittedEvents());
+
+        transferSagaOrchestration.startTransferSaga(transactionId, command);
+
+        // Commit event
+        aggregate.markEventsAsCommited();
+
+        return transactionId;
+    }
+
 
     @Override
     public String createDeposit(CreateDepositCommand createDepositCommand) {

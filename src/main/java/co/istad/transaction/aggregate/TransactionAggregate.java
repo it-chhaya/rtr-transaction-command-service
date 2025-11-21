@@ -2,6 +2,7 @@ package co.istad.transaction.aggregate;
 
 import co.istad.transaction.command.CompleteTransactionCommand;
 import co.istad.transaction.command.CreateDepositCommand;
+import co.istad.transaction.command.CreateTransferCommand;
 import co.istad.transaction.command.FailTransactionCommand;
 import co.istad.transaction.domain.CurrencyEnum;
 import co.istad.transaction.domain.TransactionStatus;
@@ -41,6 +42,24 @@ public class TransactionAggregate {
         this.id = id;
         this.version = 0L;
     }
+
+
+    public void handle(CreateTransferCommand command) {
+        // Create event object
+        TransactionCreatedEvent event = TransactionCreatedEvent.builder()
+                .transactionId(this.id)
+                .fromAccountNumber(command.fromAccountNumber())
+                .toAccountNumber(command.toAccountNumber())
+                .amount(command.amount())
+                .currency(command.currency())
+                .remark(command.remark())
+                .typeCode(TypeEnum.TRANSFER)
+                .status(TransactionStatus.PENDING)
+                .build();
+        this.applyEvent(event);
+        this.uncommittedEvents.add(event);
+    }
+
 
     public void handle(FailTransactionCommand command) {
         // Create event object
