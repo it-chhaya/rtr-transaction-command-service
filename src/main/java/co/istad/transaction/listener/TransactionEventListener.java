@@ -22,9 +22,12 @@ public class TransactionEventListener {
     private final TransactionProjectionService transactionProjectionService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "banking.transaction.deposited", groupId = "${spring.application.name}")
-    public void handleTransactionDepositedEvent(String event) {
-        log.info("Received transaction deposited event {}", event);
+    @KafkaListener(topics = {
+            "banking.transaction.deposited",
+            "transaction-created-event"
+    }, groupId = "${spring.application.name}")
+    public void handleTransactionCreatedEvent(String event) {
+        log.info("Received transaction completed event {}", event);
         try {
             Class<?> eventClass = Class.forName(
                     "co.istad.transaction.event.TransactionCreatedEvent");
