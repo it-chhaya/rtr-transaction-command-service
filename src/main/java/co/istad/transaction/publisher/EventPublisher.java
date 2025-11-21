@@ -17,6 +17,22 @@ public class EventPublisher {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
+    public void publishEvent(String topicName, String key, Object event) {
+        try {
+            String eventJsonStr = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send(topicName, key, eventJsonStr)
+                    .whenComplete((res, ex) -> {
+                        if (ex == null) {
+                            log.info("Published event {} into topic {} successfully", event, topicName);
+                        } else {
+                            log.error("Published event {} into topic {} failed", event, ex.getMessage(), ex);
+                        }
+                    });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void publishEvent(String topicName, Object event) {
         try {
             String eventJsonStr = objectMapper.writeValueAsString(event);

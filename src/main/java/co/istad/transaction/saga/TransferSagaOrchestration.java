@@ -5,6 +5,7 @@ import co.istad.transaction.command.ReserveMoneyCommand;
 import co.istad.transaction.publisher.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,26 @@ public class TransferSagaOrchestration {
                 .amount(command.amount())
                 .build();
 
-        eventPublisher.publishEvent("reserve-money-command", reserveMoneyCommand);
+        eventPublisher.publishEvent(
+                "reserve-money-command",
+                transactionId,
+                reserveMoneyCommand
+        );
     }
+
+
+    // Happy event
+    @KafkaListener(topics = "money-reserved-event", groupId = "${spring.application.name}")
+    public void handleReservedMoney(String event) {
+        log.info("handle reserved-money: {}", event);
+    }
+
+
+    // Unhappy event
+    @KafkaListener(topics = "money-reserve-failed-event", groupId = "${spring.application.name}")
+    public void handleReserveMoneyFailed(String event) {
+        log.info("handle reserve-money-failed-event: {}", event);
+    }
+
 
 }
