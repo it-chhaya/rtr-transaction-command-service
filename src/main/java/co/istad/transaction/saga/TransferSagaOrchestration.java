@@ -55,6 +55,7 @@ public class TransferSagaOrchestration {
     @KafkaListener(topics = "money-reserved-event", groupId = "${spring.application.name}")
     public void handleReservedMoney(ConsumerRecord<String, String> record) {
         log.info("handle reserved-money: {}", record.key());
+
         TransferSagaState sagaState = sagaStates.get(record.key());
         sagaState.setMoneyReserved(true);
         sagaState.setCurrentStep("CREDIT_MONEY");
@@ -70,6 +71,7 @@ public class TransferSagaOrchestration {
                 creditMoneyCommand.transactionId(),
                 creditMoneyCommand);
     }
+
 
     @KafkaListener(topics = "money-credited-event", groupId = "${spring.application.name}")
     public void handleCreditedMoney(ConsumerRecord<String, String> record) {
@@ -88,6 +90,7 @@ public class TransferSagaOrchestration {
                 completeTransactionCommand.transactionId(),
                 completeTransactionCommand);
     }
+
 
     @KafkaListener(topics = "transfer-completed-event", groupId = "${spring.application.name}")
     public void handleTransferCompleted(ConsumerRecord<String, String> record) {
@@ -178,7 +181,7 @@ public class TransferSagaOrchestration {
         } catch (JsonProcessingException e) {
             failTransactionCommand = FailTransactionCommand.builder()
                     .transactionId(record.key())
-                    .reason("Reserve money failed from account")
+                    .reason("Cancel reservation failed from account")
                     .build();
         }
         sagaState = sagaStates.get(failTransactionCommand.transactionId());
