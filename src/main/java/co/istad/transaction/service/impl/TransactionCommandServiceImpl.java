@@ -75,6 +75,7 @@ public class TransactionCommandServiceImpl
         return transactionId;
     }
 
+
     @Override
     public void handleCompleteTransactionCommand(CompleteTransactionCommand command) {
         log.info("handle deposited event: {}", command);
@@ -98,6 +99,7 @@ public class TransactionCommandServiceImpl
 
         aggregate.markEventsAsCommited();
     }
+
 
     @Override
     public void handleFailTransactionCommand(FailTransactionCommand command) {
