@@ -72,7 +72,6 @@ public class TransferSagaOrchestration {
                 creditMoneyCommand);
     }
 
-
     @KafkaListener(topics = "money-credited-event", groupId = "${spring.application.name}")
     public void handleCreditedMoney(ConsumerRecord<String, String> record) {
         log.info("handle credited-money: {}", record.key());
@@ -91,7 +90,6 @@ public class TransferSagaOrchestration {
                 completeTransactionCommand);
     }
 
-
     @KafkaListener(topics = "transfer-completed-event", groupId = "${spring.application.name}")
     public void handleTransferCompleted(ConsumerRecord<String, String> record) {
         log.info("handle transfer-completed-event");
@@ -103,7 +101,6 @@ public class TransferSagaOrchestration {
         // Clean SAGA state
         sagaStates.remove(record.key());
     }
-
 
     // Unhappy event
     @KafkaListener(topics = "money-reserve-failed-event", groupId = "${spring.application.name}")
@@ -132,7 +129,6 @@ public class TransferSagaOrchestration {
 
         sagaStates.remove(record.key());
     }
-
 
     @KafkaListener(topics = "money-credit-failed-event", groupId = "${spring.application.name}")
     public void handleMoneyCreditFailed(ConsumerRecord<String, String> record) {
@@ -166,7 +162,6 @@ public class TransferSagaOrchestration {
                 sagaState.getTransactionId(),
                 cancelReservationCommand);
     }
-
 
     @KafkaListener(topics = "reservation-cancelled-event", groupId = "${spring.application.name}")
     public void handleReservationCancelled(ConsumerRecord<String, String> record) {
